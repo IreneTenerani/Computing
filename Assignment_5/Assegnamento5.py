@@ -11,9 +11,17 @@ class VoltageData(): #the class name must be VoltgeData
     self._time=np.array(t, dtype=np.float64) #returning a numpy array of type numpy.float64 of the quantity t
     self._voltages=np.array(v, dtype=np.float64)  
     
-    self._dati=np.array([self.time, self.voltages]) # the values should be accessible with the familiar square parenthesis syntax: the  first index must refer to the entry, the second selects time (0) or voltage (1). Slicing must also work. (Manfreda usa np.column_stack ma secondo me è la stessa cosa)
+    self._dati=np.column_stack([self.time, self.voltages]) # the values should be accessible with the familiar square parenthesis syntax: the  first index must refer to the entry, the second selects time (0) or voltage (1). Slicing must also work. Mettendo ([t,v]) posso usare l'indice 0 per predere t e l'indice 1 per prendere v mettendo 0 o 1 al secondo posto nell'argomento dell'array. 
     
     self.spline=InterpolatedUnivariateSpline(self._time, self._voltages) #building the spline
+    
+    @property #definisco le property di time e voltages per renderle variabili private
+    def time(self):
+        return self._time #o self._dati[:,0]
+    
+    @property
+    def voltages(self):
+        return self._voltages #o self._dati[:,1]
     
     def __len__(self): #calling the len() function on a class instance must return the number of entries
     ''' returning number of measurements'''
@@ -26,8 +34,16 @@ class VoltageData(): #the class name must be VoltgeData
     def __iter__(self): #the class must be iterable: at each iteration, a numpy array of two values (time and voltage) corresponding to an entry in the file must be returned
     ''' returning a numpy array of two values '''
     for i in range(len(self)):
-        for j in range(len(self)):
-            yield self._dati[i, j] #NOTA: non sono sicura che questo funzioni, provare anche self._dati[i][j] o altro
+            yield self._dati[i, :] #NOTA: non sono sicura che questo returni qualcosa.
+            
+    #- the print() function must work on class instances. The output must show one entry (time and voltage), as well as the entry index, per line.- the class must also have a debug representation, printing just the values row by row. NON SO COSA CAMBI TRA LE DUE RICHIESTE 
+            
+    def __repr__(self): #generiamo linee senza separazione con (''.join(...)), e poi uniamo queste linee con '\n'
+        return '\n'.join('{} {}'.format(row[0],row[1]) for row in self._dati]) #manfreda scrive solo self invece di self._dati
+    
+    def __str__(self):
+         return '\n'.join('{} {}'.format(row[0],row[1]) for row in self._dati]) #manfreda scrive solo self invece di self._dati e con un formato più bello ma dovrebbe funzionare anche lui
+
         
     def __call__(self, t): #the class must be callable, returning an interpolated value of the tension at a given time
     ''' returning an interpolated value of the tension at a given time t'''
