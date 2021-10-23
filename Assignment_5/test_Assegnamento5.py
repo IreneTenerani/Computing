@@ -1,12 +1,14 @@
-import numpy as np
 import unittest
+import numpy as np
 from matplotlib import pyplot as plt
 from Assegnamento5 import VoltageData
+#pylint: disable=invalid-name
 
 class TestVoltageData(unittest.TestCase): #- [optional] rewrite the run_tests() function in sandbox/test_voltage_data.py as a sequence of proper UnitTests
 
 
     def setUp(self):
+        self.data2=VoltageData.from_file('Sample_data_file.txt')
         self.t, self.v = np.loadtxt('Sample_data_file.txt', unpack=True)
         self.data =VoltageData(self.t , self.v)
 
@@ -26,7 +28,7 @@ class TestVoltageData(unittest.TestCase): #- [optional] rewrite the run_tests() 
             self.assertTrue( self.v[i] , self.data.__getitem__(i, 1) ) #(v_data[1:5, 1] == v[1:5])
     '''
     def test_constructor_from_data_file(self):
-        self.data2=VoltageData.from_file('Sample_data_file.txt')
+    
         self.assertTrue(np.array_equal( self.data2.voltages, self.v , equal_nan=True))
         self.assertTrue(np.array_equal( self.data2.time, self.t , equal_nan=True))
 
