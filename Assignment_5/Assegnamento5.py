@@ -50,7 +50,7 @@ class VoltageData(): #the class name must be VoltgeData
         ''' returning number of measurements'''
         return len(self._dati)
 
-    def __getitem__(self, index, column=0):
+    def __getitem__(self, index, column=0): #Mettere questa sintassi credo sia sbagliato perché il metodo magico getitem accetta solo un argomento oltre a self che è l'indice 
         ''' returning an item of the data array'''
         return self._dati[index, column]
 
