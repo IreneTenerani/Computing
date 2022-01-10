@@ -1,6 +1,7 @@
 '''
 Classe Voltage data per leggere un file in ingresso con due colonne
 '''
+import os
 import numpy as np
 from scipy.interpolate import InterpolatedUnivariateSpline
 import matplotlib.pyplot as plt
@@ -29,8 +30,13 @@ class VoltageData(): #the class name must be VoltgeData
     @classmethod
     def from_file(cls, file_path):
         """ Alternate constructor from a data file, exploiting load_txt()"""
-        cls._time, cls._voltages = np.loadtxt(file_path, unpack=True)
-        return cls(cls._time , cls._voltages)
+        try:
+
+            cls._time, cls._voltages = np.loadtxt(file_path, unpack=True)
+            return cls(cls._time , cls._voltages)
+        except OSError as e: # Cover more problems than FileNotFoundError
+            print('Oops - cannot read the file!\n{}'.format(e))
+
 
     @property
     def time(self):
@@ -50,14 +56,14 @@ class VoltageData(): #the class name must be VoltgeData
         ''' returning number of measurements'''
         return len(self._dati)
 
-    def __getitem__(self, index, column=0):
+    def __getitem__(self, index): #Mettere questa sintassi credo sia sbagliato perché il metodo magico getitem accetta solo un argomento oltre a self che è l'indice
         ''' returning an item of the data array'''
-        return self._dati[index, column]
+        return self._dati[index]
 
     def __iter__(self):
         ''' returning a numpy array of two values '''
         for i in range(len(self)):
-            yield self._dati[i, :] #NOTA: non sono sicura che questo returni qualcosa.
+            yield self._dati[i, :]
 
 
     def __repr__(self):

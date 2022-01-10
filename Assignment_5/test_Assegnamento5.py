@@ -20,15 +20,15 @@ class TestVoltageData(unittest.TestCase): #- [optional] rewrite the run_tests() 
         self.assertTrue(np.array_equal(self.data.time, self.t, equal_nan=True))
 
     def test_square_parenthesis(self):
-        self.assertAlmostEqual(self.v[3], self.data.__getitem__(3, 1))
-        self.assertAlmostEqual(self.t[-1], self.data.__getitem__(-1, 0))
+        self.assertAlmostEqual(self.v[3], self.data.voltages[3]) #Così potrebbe funzionare, getitem deve avere solo un valore in ingresso perchè così è definito il metodo speciale __getitem__
+        self.assertAlmostEqual(self.t[-1], self.data.time[-1])
 
-    '''def test_slicing(self):
-        for i in range(5):
-            self.assertTrue( self.v[i] , self.data.__getitem__(i, 1) ) #(v_data[1:5, 1] == v[1:5])
-    '''
+    def test_slicing(self):
+        self.assertTrue(np.array_equal(self.v[1:5], self.data.voltages[1:5], equal_nan=True))
+
+
     def test_constructor_from_data_file(self):
-    
+
         self.assertTrue(np.array_equal( self.data2.voltages, self.v , equal_nan=True))
         self.assertTrue(np.array_equal( self.data2.time, self.t , equal_nan=True))
 
